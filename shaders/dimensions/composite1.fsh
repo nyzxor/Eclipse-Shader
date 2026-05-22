@@ -624,6 +624,10 @@ void Emission(
 #include "/lib/indirect_lighting_effects.glsl"
 #include "/lib/PhotonGTAO.glsl"
 
+#if indirect_effect == VOXEL_GI || defined VOXEL_RT_REFLECTIONS
+    #include "/lib/voxel_rt.glsl"
+#endif
+
 void doEdgeAwareBlur(
 	sampler2D tex1, sampler2D tex2, sampler2D depth,
 	float referenceDepth, bool hand,
@@ -1643,6 +1647,15 @@ void main() {
 		// RTAO and/or SSGI
 		#if indirect_effect == SSRT_AO || indirect_effect == SSRT_AO_GI
 			if(!hand) Indirect_lighting = ApplySSRT(Indirect_lighting, blockLightColor, MinimumLightColor, viewPos, normal, vec3(bnoise, noise_2), lightmap.y, isGrass, isDHrange);
+		#endif
+
+		// Voxel DDA global illumination
+		#if indirect_effect == VOXEL_GI
+			#if defined IS_LPV_ENABLED && defined MC_GL_ARB_shader_image_load_store
+				if(!hand) Indirect_lighting = ApplyVoxelRT(Indirect_lighting, blockLightColor, MinimumLightColor, viewPos, normal, vec3(bnoise, noise_2), lightmap.y, isGrass, isDHrange);
+			#else
+				if(!hand) Indirect_lighting = ApplySSRT(Indirect_lighting, blockLightColor, MinimumLightColor, viewPos, normal, vec3(bnoise, noise_2), lightmap.y, isGrass, isDHrange);
+			#endif
 		#endif
 
 
