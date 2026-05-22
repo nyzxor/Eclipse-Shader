@@ -118,8 +118,9 @@ const float WATER_SIM_FRAMETIME = 1.0/float(WATER_SIM_FRAMERATE);
 #define GTAO 3
 #define SSRT_AO 4
 #define SSRT_AO_GI 5
+#define VOXEL_GI 6
 
-#define indirect_effect SSAO_FILTERED // [VANILLA_AO SSAO_FILTERED SSAO_HQ GTAO SSRT_AO SSRT_AO_GI]
+#define indirect_effect VOXEL_GI // [VANILLA_AO SSAO_FILTERED SSAO_HQ GTAO SSRT_AO SSRT_AO_GI VOXEL_GI]
 
 #define AO_in_sunlight
 #define AO_Strength 1.0 // [0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0]
@@ -133,6 +134,12 @@ const float WATER_SIM_FRAMETIME = 1.0/float(WATER_SIM_FRAMERATE);
 #define RAY_STEPS 10 // [1 2 3 4 5 6 7 8 9 10 12 14 16 18 21 24 28 32 37 43 49 57 65 75 86 100]
 #define STEPS 8	// [6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99]
 #define STEP_LENGTH 12.	// [4. 5. 6. 7. 8. 9. 10. 11. 12. 13. 14. 15. 16. 17. 18. 19. 20. 21. 22. 23. 24. 25. 26. 27. 28. 29. 30.]
+
+// ── Voxel Ray Tracing settings ──────────────────────────────────────────────
+#define VOXEL_GI_SAMPLES 4  // hemisphere rays per pixel [1 2 3 4 5 6 7 8]
+#define VOXEL_GI_STEPS 48   // DDA steps per GI ray  (1 step ≈ 1 block)
+#define VOXEL_REFL_STEPS 96 // DDA steps per reflection ray
+// #define VOXEL_RT_REFLECTIONS // voxel-DDA fallback when SSR misses
 
 
 #define SEPARATE_AO

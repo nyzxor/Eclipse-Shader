@@ -2408,6 +2408,12 @@ vec3 specularReflections(
 				#ifdef VOXEL_REFLECTIONS
 					backgroundReflection *= backgroundTint;
 				#endif
+
+				// Voxel DDA fallback: fills the gaps where SSR misses
+				#if defined VOXEL_RT_REFLECTIONS && defined IS_LPV_ENABLED && defined MC_GL_ARB_shader_image_load_store
+					enviornmentReflection.rgb += VoxelReflectionFallback(playerPos, reflectedVector_L, enviornmentReflection.a);
+				#endif
+
 				// darkening for metals.
 				vec3 DarkenedDiffuseLighting = isMetal ? diffuseLighting * (1.0-enviornmentReflection.a) * (1.0-lightmap) : diffuseLighting;
 
