@@ -128,7 +128,7 @@ vec3 tonemap(vec3 col){
 	return col/(1.+luma(col));
 }
 vec3 invTonemap(vec3 col){
-	return col/(1.-luma(col));
+	return col/max(1.0-luma(col), 1e-5);
 }
 void convertHandDepth(inout float depth) {
     float ndcDepth = depth * 2.0 - 1.0;
@@ -278,7 +278,7 @@ vec3 FastCatmulRom(sampler2D colorTex, vec2 texcoord, vec4 rtMetrics, float shar
                    vec4(texture(colorTex, vec2(tc3.x,  tc12.y)).rgb, 1.0) * (w3.x  * w12.y) +
                    vec4(texture(colorTex, vec2(tc12.x, tc3.y )).rgb, 1.0) * (w12.x * w3.y );
 
-	return color.rgb/color.a;
+	return color.rgb/max(color.a, 1e-5);
 
 }
 
@@ -416,7 +416,7 @@ vec4 computeTAA(vec2 texcoord, bool hand){
 	if(hand) blendingFactor = clamp(cameraMovement, blendingFactor, 1.0);
 	
 	////// Increases blending factor when far from AABB, reduces ghosting
-	blendingFactor = clamp(blendingFactor + luma(abs(clampedframeHistory - frameHistory)/clampedframeHistory),0.0,1.0);
+	blendingFactor = clamp(blendingFactor + luma(abs(clampedframeHistory - frameHistory)/max(clampedframeHistory, vec3(1e-4))),0.0,1.0);
 	
 	////// Blend current pixel with clamped history, apply fast tonemap beforehand to reduce flickering
 	vec3 finalResult = invTonemap(mix(tonemap(clampedframeHistory), tonemap(currentFrame), blendingFactor));
